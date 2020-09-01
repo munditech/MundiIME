@@ -214,14 +214,6 @@ public class AdvistorWindow {
     public void switchContext() {
         steps = steps % 7;
         Log.d(TAG, "switchContext() steps = " + steps);
-        /*
-        if (mHandler == null) {
-            mHandler = new Handler();
-        } else {
-            mHandler.removeCallbacks(hideall);
-        }
-        */
-        stopVideo();
         switch(steps) {
             case 0 :
                 Animation animFadeOut = AnimationUtils
@@ -258,7 +250,11 @@ public class AdvistorWindow {
                 mTextView.setVisibility(View.VISIBLE);
                 //mTextView.setText(R.string.talk_content_4);
                 mTextView.setBackgroundResource(R.drawable.dialog4);
-                break;
+                if(mHandler == null) {
+                    mHandler = new Handler();
+                }
+                mHandler.postDelayed(searchResult, 1000);
+                return;
             case 5 :
                 mImageView.setVisibility(View.VISIBLE);
                 mTextView.setVisibility(View.VISIBLE);
@@ -272,20 +268,24 @@ public class AdvistorWindow {
             case 6 :
                 if(mVideoFrameLayout != null) {
                     mHandler.removeCallbacks(playvideo);
-                } else {
+                    mHandler.removeCallbacks(checkvideo);
                     stopVideo();
                 }
                 mImageView.setVisibility(View.VISIBLE);
                 mTextView.setVisibility(View.VISIBLE);
                 //mTextView.setText(R.string.talk_content_6);
                 mTextView.setBackgroundResource(R.drawable.dialog6);
-                break;
+                if(mHandler == null) {
+                    mHandler = new Handler();
+                }
+                mHandler.postDelayed(hideall, 3000);
+                return;
         }
         steps++;
-        //mHandler.postDelayed(hideall, 10000);
     }
 
     private Runnable playvideo = new Runnable() {
+
         @Override
         public void run() {
             startVideo();
@@ -295,6 +295,7 @@ public class AdvistorWindow {
     };
 
     private Runnable checkvideo = new Runnable() {
+
         @Override
         public void run() {
             if (mVideoPlayer.isCompleted()) {
@@ -308,16 +309,23 @@ public class AdvistorWindow {
         }
     };
 
-/*
     private Runnable hideall = new Runnable() {
+
         @Override
         public void run() {
-            mImageView.setVisibility(View.GONE);
-            mTextView.setVisibility(View.GONE);
-            steps = 0;
+            steps=0;
+            switchContext();
             mHandler.removeCallbacks(hideall);
-            mHandler = null;
         }
     };
-*/
+
+    private Runnable searchResult = new Runnable() {
+        @Override
+        public void run() {
+            steps = 5;
+            switchContext();
+            mHandler.removeCallbacks(searchResult);
+        }
+    };
+
 }
