@@ -267,9 +267,10 @@ public class AdvistorWindow {
                 break;
             case 6 :
                 if(mVideoFrameLayout != null) {
-                    mHandler.removeCallbacks(playvideo);
                     mHandler.removeCallbacks(checkvideo);
                     stopVideo();
+                } else {
+                    mHandler.removeCallbacks(playvideo);
                 }
                 mImageView.setVisibility(View.VISIBLE);
                 mTextView.setVisibility(View.VISIBLE);
