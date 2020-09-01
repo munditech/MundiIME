@@ -1,0 +1,4 @@
+include ':Player'
+include ':IjkPlayerLibrary'
+include ':MIme'
+rootProject.name = "MundiIME"
